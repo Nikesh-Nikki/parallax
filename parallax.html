@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        img{
+        -webkit-user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        }
+        body{
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            margin: 0rem;
+            overflow: hidden;
+        }
+        #image-track{
+            display: flex;
+            position: absolute;
+            gap: 20px;
+            left: 50%;
+            top: 50%;
+            transform: translate(0,-50%);
+        }
+        #image-track .image{
+            width: 40vmin;
+            height: 56vmin;
+            object-fit: cover;
+            object-position:100%;
+        }
+    </style>
+    <title>Parallax</title>
+</head>
+<body>
+    <div id="image-track">
+        <img src="./images/clouds.jpg" alt="" class="image" draggable="false">
+        <img src="./images/cat.jfif" alt="" class="image" draggable="false">
+        <img src="./images/joker.jfif" alt="" class="image" draggable="false">
+        <img src="./images/owl.jfif" alt="" class="image" draggable="false">
+        <img src="./images/dragon.jfif" alt="" class="image" draggable="false">
+        <img src="./images/astronaut.jfif" alt="" class="image" draggable="false">
+    </div>
+    <script>
+        const track=document.querySelector("#image-track");
+        const track_images=track.getElementsByClassName("image");
+        let drag=false;
+        let iX,iY,slider_value=0,temp_score;
+        document.addEventListener("mousedown",(event)=>{
+            drag=true;
+            iX=event.clientX;
+            iY=event.clientY;
+        });
+        document.addEventListener("mousemove",(event)=>{
+            if(drag) {
+                console.log(iX-event.clientX);
+                temp_score=slider_value+((iX-event.clientX)*2/window.innerWidth);
+                console.log(temp_score);
+                if(temp_score>=0&&temp_score<=1){
+                    // slider_value=temp_score;
+                    let left_percentage=0-temp_score*100;
+                    // console.log(left_percentage);
+                    track.animate({transform : `translate(${left_percentage}%,-50%)`},{duration : 1200, fill : "forwards"});
+                    track.style.transform=`translate(${left_percentage}%,-50%)`;
+                    for(let i of track_images){
+                        i.animate({objectPosition : `${100+left_percentage}%`},{duration : 1200,fill : "forwards"});
+                    }
+                }
+            }
+        });
+        document.addEventListener("mouseup",(event)=>{
+            drag=false;
+            slider_value=temp_score;
+        });
+    </script>
+</body>
+</html>
